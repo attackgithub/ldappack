@@ -1,7 +1,7 @@
 ﻿$entries = @(
-    "gdl-dc-01.ad.unosquare.com"
-    # "GDLA-LT-170714A.ad.unosquare.com",
-    # "gdl-vhost.ad.unosquare.com"
+    "GDLA-LT-170714A"
+    "gdl-dc-01",
+    "gdl-vhost"
 )
 foreach($entry in $entries)
 {
