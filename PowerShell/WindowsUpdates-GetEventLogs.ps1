@@ -2,8 +2,8 @@
 $date = $date.AddDays(-5)
 $entries = @(
     "GDLA-LT-170714A"
-    "gdl-dc-01",
-    "gdl-vhost"
+    # "gdl-dc-01",
+    # "gdl-vhost"
 )
 
 $Search = Get-EventLog -LogName System -Source "Microsoft-Windows-WindowsUpdateClient" -ComputerName $entries

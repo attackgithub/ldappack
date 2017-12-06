@@ -1,7 +1,10 @@
 ﻿$entries = @(
-    "GDLA-LT-170714A"
-    "gdl-dc-01",
-    "gdl-vhost"
+    # "gdl-dc-01",
+    "jac-dc-01",
+    "allius-dc-01",
+    "leon-dc-01",
+    "unocorp-dc-01",
+    "unocorp-dc-02"
 )
 foreach($entry in $entries)
 {
@@ -39,7 +42,10 @@ foreach($entry in $entries)
                     5 {"Aborted"}
                 }
             }
-        } |
+        } ,title |
         Where-Object { $_.Date -gt $date } |
-        Export-Csv -NoType "$Env:userprofile\Desktop\WindowsUpdates_$entry.csv"
+        Export-Csv -NoType "$Env:userprofile\Desktop\Windows Updates Logs\WindowsUpdates_$entry.csv"
 }
+
+# 1 - When is no data show message check server
+# 2 - Check when is local execute local command
