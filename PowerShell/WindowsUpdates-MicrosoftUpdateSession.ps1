@@ -1,26 +1,38 @@
 ﻿$entries = @(
-    # "gdl-dc-01",
+    "gdl-dc-01",
     "jac-dc-01",
     "allius-dc-01",
     "leon-dc-01",
     "unocorp-dc-01",
     "unocorp-dc-02"
 )
+$sc = { 
+    $Session = New-Object -ComObject "Microsoft.Update.Session"
+    $Searcher = $Session.CreateUpdateSearcher()
+    $historyCount = $Searcher.GetTotalHistoryCount()
+
+    $search = $Searcher.QueryHistory(0, $historyCount)
+    $search 
+}
+$hostname = hostname
+
 foreach($entry in $entries)
 {
-    $result = Invoke-Command -ComputerName $entry -ScriptBlock {
-        $Session = New-Object -ComObject "Microsoft.Update.Session"
-        $Searcher = $Session.CreateUpdateSearcher()
-        $historyCount = $Searcher.GetTotalHistoryCount()
-        
-        $search = $Searcher.QueryHistory(0, $historyCount)
-        $search
+    $remote = $entry -notmatch $hostname
+
+    if($remote) {
+        #If remote computer
+        $result = Invoke-Command -ComputerName $entry -ScriptBlock $sc
+    } else { 
+        #Localhost
+        Get-Date
+        $result = Invoke-Command -ScriptBlock $sc
     }
 
     $date = Get-Date
     $date = $date.AddDays(-10)
 
-    $result | Select-Object Date,
+    $output = $result | Select-Object Date,
         @{
             name = "Operation"; 
             expression = {
@@ -43,9 +55,13 @@ foreach($entry in $entries)
                 }
             }
         } ,title |
-        Where-Object { $_.Date -gt $date } |
-        Export-Csv -NoType "$Env:userprofile\Desktop\Windows Updates Logs\WindowsUpdates_$entry.csv"
-}
+        Where-Object { $_.Date -gt $date } 
 
-# 1 - When is no data show message check server
-# 2 - Check when is local execute local command
+    if($output -eq $null)
+    {
+        $obj = @{ 'Message' = "There is no updates information. Please check.";}
+        $output = New-Object -TypeName PSObject -Property $obj
+    }
+
+    $output | Export-Csv -NoType "$Env:userprofile\Desktop\Windows Updates Logs\WindowsUpdates_$entry.csv"
+}
