@@ -38,7 +38,7 @@ foreach($entry in $entries)
 
     # Selects the important information
     $output = $result | Select-Object PSComputerName, 
-        NextBackupTime, LastSuccessfulBackupTime, LastBackupTime | 
+        NextBackupTime, LastSuccessfulBackupTime, LastSuccessfulBackupTargetLabel, LastBackupTime | 
         Where-Object { $_.LastBackupTime -gt $date } 
 
     # Sends the output to a file
